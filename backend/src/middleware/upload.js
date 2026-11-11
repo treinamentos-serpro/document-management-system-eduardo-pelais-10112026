@@ -14,7 +14,8 @@ const storage = multer.diskStorage({
     });
   },
   filename(req, file, callback) {
-    const extension = path.extname(file.originalname.replace(/\\/g, '/')).toLowerCase();
+    const normalizedName = path.posix.basename(file.originalname.replace(/\\/g, '/'));
+    const extension = path.extname(normalizedName).toLowerCase();
     callback(null, `${randomUUID()}${extension}`);
   },
 });
@@ -28,7 +29,8 @@ const upload = multer({
     parts: 2,
   },
   fileFilter(req, file, callback) {
-    if (!getUploadFileType(file.originalname, file.mimetype)) {
+    const normalizedName = path.posix.basename(file.originalname.replace(/\\/g, '/'));
+    if (!getUploadFileType(normalizedName, file.mimetype)) {
       callback(new AppError(400, 'INVALID_FILE_TYPE', 'O tipo de arquivo não é permitido.'));
       return;
     }

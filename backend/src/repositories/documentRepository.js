@@ -1,4 +1,5 @@
 const fs = require('node:fs/promises');
+const path = require('node:path');
 
 const documents = new Map();
 
@@ -31,7 +32,7 @@ async function getStorageUsage(storageDirectory) {
 
   const fileSizes = await Promise.all(entries
     .filter((entry) => entry.isFile())
-    .map(async (entry) => (await fs.stat(`${storageDirectory}/${entry.name}`)).size));
+    .map(async (entry) => (await fs.stat(path.join(storageDirectory, entry.name))).size));
 
   return fileSizes.reduce((total, size) => total + size, 0);
 }

@@ -1,3 +1,4 @@
+const path = require('node:path');
 const AppError = require('../errors/appError');
 const documentService = require('../services/documentService');
 
@@ -22,7 +23,11 @@ function download(req, res, next) {
     return;
   }
 
-  res.download(document.filePath, document.originalName, {
+  const downloadName = path.posix
+    .basename(document.originalName.replace(/\\/g, '/'))
+    .replace(/[\u0000-\u001f\u007f]/g, '_') || 'document';
+
+  res.download(document.filePath, downloadName, {
     headers: {
       'Content-Type': document.mimeType,
       'X-Content-Type-Options': 'nosniff',
