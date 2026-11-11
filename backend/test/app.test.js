@@ -63,6 +63,14 @@ test('upload, listagem e download de documentos', async () => {
 
   const missingDocumentResponse = await fetch(`${baseUrl}/documents/inexistente/download`);
   assert.strictEqual(missingDocumentResponse.status, 404);
+
+  for (let requestNumber = 2; requestNumber < 100; requestNumber += 1) {
+    const response = await fetch(`${baseUrl}/documents/inexistente/download`);
+    assert.strictEqual(response.status, 404);
+  }
+
+  const rateLimitedResponse = await fetch(`${baseUrl}/documents/inexistente/download`);
+  assert.strictEqual(rateLimitedResponse.status, 429);
 });
 
 test('upload rejeita requisição sem arquivo', async () => {

@@ -23,7 +23,7 @@ function download(req, res) {
     return res.status(404).json({ error: 'Documento não encontrado.' });
   }
 
-  const filePath = path.join(storageDirectory, document.storedName);
+  const filePath = path.join(storageDirectory, path.basename(document.storedName));
   return res.download(filePath, document.metadata.originalName, (error) => {
     if (error && !res.headersSent) {
       res.status(404).json({ error: 'Documento não encontrado.' });
