@@ -27,6 +27,7 @@ function errorHandler(error, req, res, next) {
   }
 
   if (error.name === 'MulterError') {
+    console.error('Falha no upload multipart:', error.code);
     res.status(400).json({
       error: {
         code: 'INVALID_UPLOAD',
@@ -36,6 +37,7 @@ function errorHandler(error, req, res, next) {
     return;
   }
 
+  console.error(error);
   res.status(500).json({
     error: {
       code: 'INTERNAL_ERROR',

@@ -2,13 +2,13 @@ const path = require('node:path');
 const AppError = require('../errors/appError');
 const documentService = require('../services/documentService');
 
-function upload(req, res, next) {
+async function upload(req, res) {
   if (!req.file) {
-    next(new AppError(400, 'MISSING_FILE', 'Envie um arquivo no campo "file".'));
-    return;
+    throw new AppError(400, 'MISSING_FILE', 'Envie um arquivo no campo "file".');
   }
 
-  res.status(201).json(documentService.createDocument(req.file));
+  const document = await documentService.createDocument(req.file);
+  res.status(201).json(document);
 }
 
 function list(req, res) {
